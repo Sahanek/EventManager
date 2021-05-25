@@ -15,6 +15,8 @@ namespace EventManager.DataAccess.Entities
         public string Description { get; set; }
         [Range(0,25)]
         public short Participates { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
         public List<User> Users { get; set; }
     }
 }

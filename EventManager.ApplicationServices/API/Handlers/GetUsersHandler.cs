@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EventManager.ApplicationServices.API.Domain;
 using EventManager.DataAccess;
+using EventManager.DataAccess.CQRS;
+using EventManager.DataAccess.CQRS.Queries;
 using EventManager.DataAccess.Entities;
 using MediatR;
 
@@ -14,17 +16,18 @@ namespace EventManager.ApplicationServices.API.Handlers
 {
     public class GetUsersHandler : IRequestHandler<GetUsersRequest,GetUsersResponse>
     {
-        private readonly IRepository<User> _userRepository;
+        private readonly IQueryExecutor _queryExecutor;
         private readonly IMapper _mapper;
 
-        public GetUsersHandler(IRepository<User> userRepository, IMapper mapper)
+        public GetUsersHandler(IQueryExecutor queryExecutor, IMapper mapper)
         {
-            _userRepository = userRepository;
+            _queryExecutor = queryExecutor;
             _mapper = mapper;
         }
         public async Task<GetUsersResponse> Handle(GetUsersRequest request, CancellationToken cancellationToken)
         {
-            var users = await _userRepository.GetAll();
+            var query = new GetUsersQuery();
+            var users = await _queryExecutor.Execute(query);
 
             var mappedUsers = _mapper.Map<List<Domain.Models.User>>(users);
 

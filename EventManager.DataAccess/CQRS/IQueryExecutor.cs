@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using EventManager.DataAccess.CQRS.Queries;
 
-namespace EventManager.DataAccess
+namespace EventManager.DataAccess.CQRS
 {
     public interface IQueryExecutor
     {

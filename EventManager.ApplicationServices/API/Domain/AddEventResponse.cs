@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MediatR;
+using EventManager.ApplicationServices.API.Domain.Models;
+
 
 namespace EventManager.ApplicationServices.API.Domain
 {
-    public class GetEventsRequest :  IRequest<GetEventsResponse>
+    public class AddEventResponse : ResponseBase<Event>
     {
-        public string Title { get; set; }
     }
 }

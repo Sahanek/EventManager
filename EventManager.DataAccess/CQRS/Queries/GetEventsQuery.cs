@@ -8,11 +8,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventManager.DataAccess.CQRS.Queries
 {
-    class GetEventsQuery : QueryBase<List<Event>>
+    public class GetEventsQuery : QueryBase<List<Event>>
     {
+        public string Title { get; set; }
         public override  Task<List<Event>> Execute(EventStorageDbContext context)
         {
-            return context.Events.ToListAsync();
+            return Title is null
+                ? context.Events.ToListAsync()
+                : context.Events.Where(x => x.Title.ToLower().Contains(Title.ToLower())).ToListAsync();
         }
     }
 }

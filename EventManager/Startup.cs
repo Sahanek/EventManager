@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using EventManager.ApplicationServices.API.Domain;
 using EventManager.ApplicationServices.API.Mappings;
 using EventManager.DataAccess;
+using EventManager.DataAccess.CQRS;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -33,12 +34,12 @@ namespace EventManager
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IQueryExecutor, QueryExecutor>();
+            services.AddTransient<ICommandExecutor, CommandExecutor>();
 
             services.AddAutoMapper(typeof(EventProfile).Assembly);
 
             services.AddMediatR(typeof(ResponseBase<>));
 
-            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
             services.AddDbContext<EventStorageDbContext>(opt =>
                 opt.UseSqlServer(Configuration.GetConnectionString("EventDatabaseConnection")));

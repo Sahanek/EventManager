@@ -26,5 +26,23 @@ namespace EventManager.Controllers
             var response = await _mediator.Send(request);
             return Ok(response);
         }
+
+        [HttpGet("{eventId}")]
+        public async Task<IActionResult> GetById([FromRoute] int eventId)
+        {
+            var request = new GetEventByIdRequest()
+            {
+                EventId = eventId
+            };
+            var response = await _mediator.Send(request);
+            return Ok(response);
+        }
+
+        [HttpPost("")]
+        public async Task<IActionResult> AddEvent([FromBody] AddEventRequest request)
+        {
+            var response = await _mediator.Send(request);
+            return Ok(response);
+        }
     }
 }

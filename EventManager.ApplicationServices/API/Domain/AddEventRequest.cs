@@ -7,8 +7,12 @@ using MediatR;
 
 namespace EventManager.ApplicationServices.API.Domain
 {
-    public class GetEventsRequest :  IRequest<GetEventsResponse>
+    public class AddEventRequest : IRequest<AddEventResponse>
     {
         public string Title { get; set; }
+        public string Description { get; set; }
+        public DateTime StarTime { get; set; }
+        public DateTime EndTime { get; set; }
+        
     }
 }

@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace EventManager.DataAccess.CQRS.Commands
 {
-    public class CommandBase
+    public abstract class CommandBase<TParameter, TResult>
     {
+        public TParameter Parameter { get; set; }
+
+        public abstract Task<TResult> Execute(EventStorageDbContext context);
     }
 }
