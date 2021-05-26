@@ -26,7 +26,9 @@ namespace EventManager.ApplicationServices.API.Handlers
         public async Task<GetEventsResponse> Handle(GetEventsRequest request, CancellationToken cancellationToken)
         {
             var query = new GetEventsQuery()
-                {Title = request.Title };
+            {
+                Title = request.Title
+            };
             var events = await _queryExecutor.Execute(query);
             var mappedEvents = _mapper.Map<List<Domain.Models.Event>>(events);
 

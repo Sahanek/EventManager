@@ -8,32 +8,40 @@ using AutoMapper;
 using EventManager.ApplicationServices.API.Domain;
 using EventManager.ApplicationServices.API.Domain.Models;
 using EventManager.DataAccess.CQRS;
+using EventManager.DataAccess.CQRS.Commands;
 using EventManager.DataAccess.CQRS.Queries;
-
 using MediatR;
 
 namespace EventManager.ApplicationServices.API.Handlers
 {
-    class GetEventByIdHandler : IRequestHandler<GetEventByIdRequest, GetEventByIdResponse>
+    public class DeleteEventHandler : IRequestHandler<DeleteEventRequest, DeleteEventResponse>
     {
         private readonly IMapper _mapper;
         private readonly IQueryExecutor _queryExecutor;
+        private readonly ICommandExecutor _commandExecutor;
 
-        public GetEventByIdHandler(IMapper mapper, IQueryExecutor queryExecutor)
+        public DeleteEventHandler(IMapper mapper, IQueryExecutor queryExecutor, ICommandExecutor commandExecutor)
         {
             _mapper = mapper;
             _queryExecutor = queryExecutor;
+            _commandExecutor = commandExecutor;
         }
-        public async Task<GetEventByIdResponse> Handle(GetEventByIdRequest request, CancellationToken cancellationToken)
+        public async Task<DeleteEventResponse> Handle(DeleteEventRequest request, CancellationToken cancellationToken)
         {
             var query = new GetEventQuery()
             {
                 Id = request.EventId
             };
-
             var eventFromDb = await _queryExecutor.Execute(query);
-            var mappedEvent = _mapper.Map<EventWithUsers>(eventFromDb);
-            var response = new GetEventByIdResponse()
+            if (eventFromDb is null) return null;
+
+            var command = new DeleteEventCommand()
+            {
+                Parameter = eventFromDb
+            };
+            var deletedEvent = await _commandExecutor.Execute(command);
+            var mappedEvent = _mapper.Map<Domain.Models.Event>(deletedEvent);
+            var response = new DeleteEventResponse()
             {
                 Data = mappedEvent
             };

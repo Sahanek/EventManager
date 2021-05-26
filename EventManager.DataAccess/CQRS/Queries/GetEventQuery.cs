@@ -13,7 +13,9 @@ namespace EventManager.DataAccess.CQRS.Queries
         public int Id { get; set; }
         public override async Task<Event> Execute(EventStorageDbContext context)
         {
-            var eventFromDb = await context.Events.FirstOrDefaultAsync(x => x.Id == Id);
+            var eventFromDb = await context.Events
+                .Include(x => x.Users)
+                .FirstOrDefaultAsync(x => x.Id == Id);
             return eventFromDb;
         }
     }

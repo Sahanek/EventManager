@@ -4,18 +4,21 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MediatR;
 
-namespace EventManager.DataAccess.Entities
+namespace EventManager.ApplicationServices.API.Domain
 {
-    public class User : EntityBase
+    public class AddUserRequest : IRequest<AddUserResponse>
     {
-        [Required]
         [EmailAddress]
-        public string Email { get; set; }
         [Required]
         [MaxLength(100)]
+        [MinLength(5)]
+        public string Email { get; set; }
+        [MaxLength(100)]
+        [MinLength(2)]
+
         public string Name { get; set; }
 
-        public List<Event> Events { get; set; } = new();
     }
 }

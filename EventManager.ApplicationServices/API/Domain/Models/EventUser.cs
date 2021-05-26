@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace EventManager.ApplicationServices.API.Domain.Models
 {
-    public class User
+    public class EventUser
     {
         public int Id { get; set; }
-        public string Email { get; set; }
-        public string Name { get; set; }
+        public int EventId { get; set; }
+        public int UserId { get; set; }
     }
 }

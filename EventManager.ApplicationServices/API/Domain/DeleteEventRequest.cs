@@ -7,7 +7,8 @@ using MediatR;
 
 namespace EventManager.ApplicationServices.API.Domain
 {
-    public class GetUsersRequest : IRequest<GetUsersResponse>
+    public class DeleteEventRequest : IRequest<DeleteEventResponse>
     {
+        public int EventId { get; set; }
     }
 }

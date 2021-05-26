@@ -14,26 +14,29 @@ using MediatR;
 
 namespace EventManager.ApplicationServices.API.Handlers
 {
-    public class GetUsersHandler : IRequestHandler<GetUsersRequest,GetUsersResponse>
+    public class GetUserByIdHandler : IRequestHandler<GetUserByIdRequest, GetUserByIdResponse>
     {
         private readonly IQueryExecutor _queryExecutor;
         private readonly IMapper _mapper;
 
-        public GetUsersHandler(IQueryExecutor queryExecutor, IMapper mapper)
+        public GetUserByIdHandler(IQueryExecutor queryExecutor, IMapper mapper)
         {
             _queryExecutor = queryExecutor;
             _mapper = mapper;
         }
-        public async Task<GetUsersResponse> Handle(GetUsersRequest request, CancellationToken cancellationToken)
+        public async Task<GetUserByIdResponse> Handle(GetUserByIdRequest request, CancellationToken cancellationToken)
         {
-            var query = new GetUsersQuery();
-            var users = await _queryExecutor.Execute(query);
-
-            var mappedUsers = _mapper.Map<List<Domain.Models.User>>(users);
-
-            var response = new GetUsersResponse()
+            var query = new GetUserByIdQuery()
             {
-                Data = mappedUsers
+                Id = request.UserId
+            };
+            var user = await _queryExecutor.Execute(query);
+
+            var mappedUser = _mapper.Map<Domain.Models.User>(user);
+
+            var response = new GetUserByIdResponse()
+            {
+                Data = mappedUser
             };
 
             return response;

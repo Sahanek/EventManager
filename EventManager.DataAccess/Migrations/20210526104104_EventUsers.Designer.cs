@@ -4,14 +4,16 @@ using EventManager.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EventManager.DataAccess.Migrations
 {
     [DbContext(typeof(EventStorageDbContext))]
-    partial class EventStorageDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210526104104_EventUsers")]
+    partial class EventUsers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,6 +51,29 @@ namespace EventManager.DataAccess.Migrations
                     b.ToTable("Events");
                 });
 
+            modelBuilder.Entity("EventManager.DataAccess.Entities.EventUser", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("EventId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int")
+                        .HasColumnName("ParticpantId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("EventUsers");
+                });
+
             modelBuilder.Entity("EventManager.DataAccess.Entities.User", b =>
                 {
                     b.Property<int>("Id")
@@ -83,6 +108,25 @@ namespace EventManager.DataAccess.Migrations
                     b.HasIndex("UsersId");
 
                     b.ToTable("EventUser");
+                });
+
+            modelBuilder.Entity("EventManager.DataAccess.Entities.EventUser", b =>
+                {
+                    b.HasOne("EventManager.DataAccess.Entities.Event", "Event")
+                        .WithMany()
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EventManager.DataAccess.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Event");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("EventUser", b =>

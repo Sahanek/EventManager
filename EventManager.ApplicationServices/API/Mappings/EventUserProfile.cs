@@ -9,13 +9,13 @@ using EventManager.ApplicationServices.API.Domain.Models;
 
 namespace EventManager.ApplicationServices.API.Mappings
 {
-    public class UserProfile : Profile
+    public class EventUserProfile : Profile
     {
-        public UserProfile()
+        public EventUserProfile()
         {
-            CreateMap<DataAccess.Entities.User, User>();
+            CreateMap<DataAccess.Entities.EventUser, EventUser>();
 
-            CreateMap<AddUserRequest, DataAccess.Entities.User>();
+            CreateMap<AddUserToEventRequest, DataAccess.Entities.EventUser>();
         }
     }
 }

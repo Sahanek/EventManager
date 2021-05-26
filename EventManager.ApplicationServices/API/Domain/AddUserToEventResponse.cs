@@ -2,7 +2,7 @@
 
 namespace EventManager.ApplicationServices.API.Domain
 {
-    public class GetEventByIdResponse : ResponseBase<EventWithUsers>
+    public class AddUserToEventResponse : ResponseBase<Event>
     {
     }
 }

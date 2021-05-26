@@ -8,11 +8,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventManager.DataAccess.CQRS.Queries
 {
-    public class GetUsersQuery : QueryBase<List<User>>
+    public class GetUserByIdQuery : QueryBase<User>
     {
-        public override Task<List<User>> Execute(EventStorageDbContext context)
+        public int Id { get; set; }
+        public override async Task<User> Execute(EventStorageDbContext context)
         {
-            return context.Users.ToListAsync();
+            var user = await context.Users.FirstOrDefaultAsync(x => x.Id == Id);
+            return user;
         }
     }
 }

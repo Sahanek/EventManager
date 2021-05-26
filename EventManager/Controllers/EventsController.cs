@@ -9,9 +9,8 @@ using MediatR;
 
 namespace EventManager.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class EventsController : ControllerBase
+
+    public class EventsController : BaseApiController
     {
         private readonly IMediator _mediator;
 
@@ -35,6 +34,10 @@ namespace EventManager.Controllers
                 EventId = eventId
             };
             var response = await _mediator.Send(request);
+
+            if (response.Data is null)
+                return NotFound($"Event with id:{eventId} does not exist.");
+
             return Ok(response);
         }
 
@@ -42,6 +45,57 @@ namespace EventManager.Controllers
         public async Task<IActionResult> AddEvent([FromBody] AddEventRequest request)
         {
             var response = await _mediator.Send(request);
+            return CreatedAtAction(nameof(GetById), new {eventId = response.Data.Id}, response.Data);
+        }
+
+        [HttpPut("{eventId}/user/{userId}")]
+        public async Task<IActionResult> AddUserToEvent([FromRoute] int eventId, [FromRoute] int userId)
+        {
+            var requestEvent = new GetEventByIdRequest()
+            {
+                EventId = eventId
+            };
+            var responseEvent = await _mediator.Send(requestEvent);
+
+            if (responseEvent.Data is null) 
+                return NotFound($"Event with id:{eventId} does not exist.");
+
+            if (responseEvent.Data.Participates == 25)
+                return BadRequest("Event is full.");
+
+            var userRequest = new GetUserByIdRequest()
+            {
+                UserId = userId
+            };
+
+            var responseUser = await _mediator.Send(userRequest);
+
+            if (responseUser.Data is null)
+                return NotFound($"User with id:{userId} does not exist.");
+
+            if (responseEvent.Data.Users.Exists(x => x.Id == userId)) 
+                return BadRequest("The user has already added this event.");
+
+            var addUserToEventRequest = new AddUserToEventRequest()
+            {
+                EventId = eventId,
+                UserId = userId
+            };
+
+            var response = await _mediator.Send(addUserToEventRequest);
+            return Ok(response);
+        }
+
+        [HttpDelete("{eventId}")]
+        public async Task<IActionResult> DeleteEvent([FromRoute] int eventId)
+        {
+            var request = new DeleteEventRequest()
+            {
+                EventId = eventId
+            };
+            var response = await _mediator.Send(request);
+
+
             return Ok(response);
         }
     }
